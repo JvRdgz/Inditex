@@ -1,8 +1,8 @@
-package com.inditex.productdetail.web.infra.outputport;
+package com.inditex.productdetail.web.app.infra.outputport;
 
 import java.sql.Date;
 
-import com.inditex.productdetail.web.domain.Prices;
+import com.inditex.productdetail.web.app.domain.Prices;
 
 public interface EntityRepository {
 

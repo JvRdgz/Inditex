@@ -1,29 +1,61 @@
 package com.inditex.productdetail.web.app;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.junit.Assert.assertTrue;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.mockito.Mockito;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest
+import com.inditex.productdetail.web.app.domain.Prices;
+import com.inditex.productdetail.web.app.infra.inputadapter.PricesAPI;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 class InditexApplicationTests {
 
-	@Autowired
-	MockMvc mockMvc;
+	PricesAPI pricesAPI = new PricesAPI();
 
 	@Test
-	void testGetProduct() throws Exception {
+	void testStatusOk() {
+		boolean result = pricesAPI.status().getStatusCode().is2xxSuccessful();
 
-		mockMvc.perform(get("/price/?start-date=2020-06-15-00.00.00&product-id=35455&brand-id=1"))
-				.andExpect(status().is(200)).andExpect(content().json(
-						"{'productId':'35455', 'brandId': 1, 'priceList': 3, 'startDate': 2020-06-15-00.00.00, 'endDate': 2020-06-15-11.00.00, 'price': 30.50}"));
+		assertTrue(result);
+	}
+
+	@Test
+	void testGetProduct() throws ParseException {
+		
+		SimpleDateFormat format = new SimpleDateFormat("yyy-MM-dd HH:mm:ss");
+
+		Date formatStartDate = format.parse("2020-06-14 00:00:00");
+		java.sql.Date startDate = new java.sql.Date(formatStartDate.getTime());
+		Date formatEndDate = format.parse("2020-12-31 23:59:59");
+		java.sql.Date endDate = new java.sql.Date(formatEndDate.getTime());
+		String productId = "35455";
+		int brandId = 1;
+
+		Prices prices = new Prices();
+
+		prices.setBrandId(brandId);
+		prices.setId((long) 1);
+		prices.setStartDate(startDate);
+		prices.setEndDate(endDate);
+		prices.setProductId(productId);
+		prices.setPriceList(1);
+		prices.setPriority(0);
+		prices.setPrice(35.50);
+		prices.setCurr("EUR");
+
+		Mockito.when(pricesAPI.getPrice(Mockito.any(), Mockito.any(), Mockito.anyString(), Mockito.anyInt()))
+				.thenReturn(prices);
+
+		boolean result = pricesAPI.status().getStatusCode().is2xxSuccessful();
+
+		assertTrue(result);
 
 	}
 

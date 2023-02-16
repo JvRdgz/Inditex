@@ -1,4 +1,4 @@
-package com.inditex.productdetail.web.infra.inputadapter;
+package com.inditex.productdetail.web.app.infra.inputadapter;
 
 import java.sql.Date;
 
@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.inditex.productdetail.web.domain.Prices;
-import com.inditex.productdetail.web.infra.inputport.PricesInputPort;
+import com.inditex.productdetail.web.app.domain.Prices;
+import com.inditex.productdetail.web.app.infra.inputport.PricesInputPort;
 
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/")
 public class PricesAPI {
 
 	@Autowired
@@ -24,7 +24,6 @@ public class PricesAPI {
 
 	@GetMapping(value = "/status")
 	public ResponseEntity<String> status() {
-		System.out.print("HOLAAAA");
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 

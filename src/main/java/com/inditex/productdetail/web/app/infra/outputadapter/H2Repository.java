@@ -1,14 +1,16 @@
-package com.inditex.productdetail.web.infra.outputadapter;
+package com.inditex.productdetail.web.app.infra.outputadapter;
 
 import java.sql.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
 
-import com.inditex.productdetail.web.domain.Prices;
-import com.inditex.productdetail.web.infra.outputport.EntityRepository;
+import com.inditex.productdetail.web.app.domain.Prices;
+import com.inditex.productdetail.web.app.infra.outputport.EntityRepository;
 
+@Component
 public class H2Repository implements EntityRepository {
 
 	@Autowired

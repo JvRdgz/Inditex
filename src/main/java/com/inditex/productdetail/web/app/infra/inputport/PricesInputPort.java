@@ -1,8 +1,8 @@
-package com.inditex.productdetail.web.infra.inputport;
+package com.inditex.productdetail.web.app.infra.inputport;
 
 import java.sql.Date;
 
-import com.inditex.productdetail.web.domain.Prices;
+import com.inditex.productdetail.web.app.domain.Prices;
 
 public interface PricesInputPort {
 
