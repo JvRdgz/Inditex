@@ -31,9 +31,9 @@ class InditexApplicationTests {
 		
 		SimpleDateFormat format = new SimpleDateFormat("yyy-MM-dd HH:mm:ss");
 
-		Date formatStartDate = format.parse("2020-06-14 00:00:00");
+		Date formatStartDate = format.parse("2020-06-14T00:00:00");
 		java.sql.Date startDate = new java.sql.Date(formatStartDate.getTime());
-		Date formatEndDate = format.parse("2020-12-31 23:59:59");
+		Date formatEndDate = format.parse("2020-12-31T23:59:59");
 		java.sql.Date endDate = new java.sql.Date(formatEndDate.getTime());
 		String productId = "35455";
 		int brandId = 1;

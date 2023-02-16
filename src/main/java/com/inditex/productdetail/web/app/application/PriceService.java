@@ -20,4 +20,9 @@ public class PriceService implements PricesInputPort {
 		return entityRepository.getPrice(startDate, endDate, productId, brandId);
 	}
 
+	@Override
+	public Prices getPriceById(int id) {
+		return entityRepository.getPriceById(id);
+	}
+
 }

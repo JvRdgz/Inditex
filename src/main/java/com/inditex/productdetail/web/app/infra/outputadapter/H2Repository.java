@@ -19,9 +19,15 @@ public class H2Repository implements EntityRepository {
 	// También debería de ser genérica? (No Prices)
 	@Override
 	public Prices getPrice(Date startDate, Date endDate, String productId, int brandId) {
-		String sql = "SELECT * FROM PRICES WHERE START_DATE='" + startDate + "' AND END_DATE='" + endDate
-				+ "' AND PRODUCT_ID='" + productId + "' AND BRAND_ID='" + brandId + "'";
-		return (Prices) template.query(sql, BeanPropertyRowMapper.newInstance(Prices.class));
+		String sql = "SELECT * FROM PRICES WHERE START_DATE=? AND END_DATE=? AND PRODUCT_ID=? AND BRAND_ID=?";
+		Prices prices = template.queryForObject(sql, new Object[] {startDate,endDate,productId,brandId}, new BeanPropertyRowMapper<Prices>(Prices.class));
+		return prices;
 	}
 
+	@Override
+	public Prices getPriceById(int id) {
+		String sql = "SELECT * FROM PRICES WHERE ID=?";
+		Prices price = template.queryForObject(sql, new Object[] {id}, new BeanPropertyRowMapper<Prices>(Prices.class));
+		return price;
+	}
 }

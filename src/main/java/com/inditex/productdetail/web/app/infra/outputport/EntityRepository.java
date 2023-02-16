@@ -8,4 +8,6 @@ public interface EntityRepository {
 
 	// Debería de ser genérica? (No Prices)
 	public Prices getPrice(Date startDate, Date endDate, String productId, int brandId);
+
+	public Prices getPriceById(int id);
 }
