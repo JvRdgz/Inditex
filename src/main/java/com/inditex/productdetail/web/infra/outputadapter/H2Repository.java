@@ -14,11 +14,12 @@ public class H2Repository implements EntityRepository {
 	@Autowired
 	private JdbcTemplate template;
 
+	// También debería de ser genérica? (No Prices)
 	@Override
-	public <T> T getPrice(Long id, String productId, int priceList, Date startDate, Date endDate, Long price) {
-		String sql = "SELECT * FROM PRICES WHERE PRODUCT_ID='" + productId + "' AND PRICE_LIST='" + priceList
-				+ "' AND START_DATE ='" + startDate + "' AND END_DATE='" + endDate + "' AND PRICE='" + price + "'";
-		return (T) template.query(sql, BeanPropertyRowMapper.newInstance(Prices.class));
+	public Prices getPrice(Date startDate, Date endDate, String productId, int brandId) {
+		String sql = "SELECT * FROM PRICES WHERE START_DATE='" + startDate + "' AND END_DATE='" + endDate
+				+ "' AND PRODUCT_ID='" + productId + "' AND BRAND_ID='" + brandId + "'";
+		return (Prices) template.query(sql, BeanPropertyRowMapper.newInstance(Prices.class));
 	}
 
 }

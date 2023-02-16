@@ -20,7 +20,7 @@ public class Prices {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	@Column(name = "BRAND_ID")
-	private Long brandId;
+	private int brandId;
 	@Column(name = "START_DATE")
 	private Date startDate;
 	@Column(name = "END_DATE")

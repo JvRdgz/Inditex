@@ -21,7 +21,7 @@ class InditexApplicationTests {
 	@Test
 	void testGetProduct() throws Exception {
 
-		mockMvc.perform(get("/product/?start-date=2020-06-15-00.00.00&product-id=35455&brand-id=1"))
+		mockMvc.perform(get("/price/?start-date=2020-06-15-00.00.00&product-id=35455&brand-id=1"))
 				.andExpect(status().is(200)).andExpect(content().json(
 						"{'productId':'35455', 'brandId': 1, 'priceList': 3, 'startDate': 2020-06-15-00.00.00, 'endDate': 2020-06-15-11.00.00, 'price': 30.50}"));
 
