@@ -1,10 +1,10 @@
-package com.inditex.productdetail.web.app.infra.inputport;
+package com.inditex.productdetail.web.app.domain.outputport;
 
-import java.sql.Date;
+import java.util.Date;
 
 import com.inditex.productdetail.web.app.domain.Prices;
 
-public interface PricesInputPort {
+public interface EntityRepository {
 
 	public Prices getPrice(Date startDate, Date endDate, String productId, int brandId);
 	public Prices getPriceById(int id);

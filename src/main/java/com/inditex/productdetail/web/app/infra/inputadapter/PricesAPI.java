@@ -1,6 +1,7 @@
 package com.inditex.productdetail.web.app.infra.inputadapter;
 
-import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.inditex.productdetail.web.app.domain.Prices;
-import com.inditex.productdetail.web.app.infra.inputport.PricesInputPort;
+import com.inditex.productdetail.web.app.domain.inputport.PricesInputPort;
 
 @RestController
 @RequestMapping("/")
@@ -27,17 +28,35 @@ public class PricesAPI {
 	public ResponseEntity<String> status() {
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
-	
-	@GetMapping(value="/price-id/{id}")
-	public Prices getPriceById(@PathVariable(name = "id") int id) {
-		return pricesInputPort.getPriceById(id);
+
+	@GetMapping(value = "/price-id/{id}")
+	public ResponseEntity<Prices> getPriceById(@PathVariable(name = "id") int id) {
+		Prices price = pricesInputPort.getPriceById(id);
+		if (null != price) {
+			return new ResponseEntity<>(price, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Prices>(HttpStatus.NOT_FOUND);
+		}
 	}
 
 	@PostMapping(value = "/price")
-	public Prices getPrice(
-			@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date startDate,
-			@RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date endDate,
-			@RequestParam("productId") String producId, @RequestParam("brandId") int brandId) {
-		return pricesInputPort.getPrice(startDate, endDate, producId, brandId);
+	public ResponseEntity<Prices> getPrice(
+			@RequestParam("start-date") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") Date startDate,
+			@RequestParam("end-date") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") Date endDate,
+			@RequestParam("product-id") String producId, @RequestParam("brand-id") int brandId) {
+		Prices price = pricesInputPort.getPrice(startDate, endDate, producId, brandId);
+		if (null != price) {
+			return new ResponseEntity<Prices>(price, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Prices>(HttpStatus.NOT_FOUND);
+		}
+	}
+
+	@GetMapping(value = "/date")
+	public ResponseEntity<Date> getDate() {
+		Timestamp time = new Timestamp(System.currentTimeMillis());
+		Date date = time;
+		return new ResponseEntity<Date>(date, HttpStatus.OK);
+
 	}
 }

@@ -1,13 +1,11 @@
-package com.inditex.productdetail.web.app.infra.outputport;
+package com.inditex.productdetail.web.app.domain.inputport;
 
-import java.sql.Date;
+import java.util.Date;
 
 import com.inditex.productdetail.web.app.domain.Prices;
 
-public interface EntityRepository {
+public interface PricesInputPort {
 
-	// Debería de ser genérica? (No Prices)
 	public Prices getPrice(Date startDate, Date endDate, String productId, int brandId);
-
 	public Prices getPriceById(int id);
 }
