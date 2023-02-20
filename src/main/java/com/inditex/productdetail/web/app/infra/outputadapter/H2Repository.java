@@ -19,16 +19,16 @@ public class H2Repository implements EntityRepository {
 	@Override
 	public Prices getPrice(Date startDate, Date endDate, String productId, int brandId) {
 		String sql = "SELECT * FROM PRICES WHERE START_DATE=? AND END_DATE=? AND PRODUCT_ID=? AND BRAND_ID=? ORDER BY PRIORITY DESC";
-		Prices prices = template.queryForObject(sql, new Object[] { startDate, endDate, productId, brandId },
-				new BeanPropertyRowMapper<Prices>(Prices.class));
+		Prices prices = template.queryForObject(sql, new BeanPropertyRowMapper<Prices>(Prices.class),
+				new Object[] { startDate, endDate, productId, brandId });
 		return prices;
 	}
 
 	@Override
 	public Prices getPriceById(int id) {
 		String sql = "SELECT * FROM PRICES WHERE ID=?";
-		Prices price = template.queryForObject(sql, new Object[] { id },
-				new BeanPropertyRowMapper<Prices>(Prices.class));
+		Prices price = template.queryForObject(sql, new BeanPropertyRowMapper<Prices>(Prices.class),
+				new Object[] { id });
 		return price;
 	}
 }

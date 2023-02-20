@@ -1,21 +1,21 @@
 package com.inditex.productdetail.web.app;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
-import org.junit.Before;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.inditex.productdetail.web.app.application.PriceService;
 import com.inditex.productdetail.web.app.domain.Prices;
@@ -24,29 +24,41 @@ import com.inditex.productdetail.web.app.domain.outputport.EntityRepository;
 import com.inditex.productdetail.web.app.infra.inputadapter.PricesAPI;
 import com.inditex.productdetail.web.app.infra.outputadapter.H2Repository;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(MockitoExtension.class)
 class InditexApplicationTests {
 
 	@InjectMocks
-	PricesInputPort pricesInputPort = new PriceService();
+	PricesInputPort pricesInputPort = new PricesInputPort() {
+
+		@Override
+		public Prices getPriceById(int id) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Prices getPrice(Date startDate, Date endDate, String productId, int brandId) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+	};
 
 	@InjectMocks
 	EntityRepository entityRepository = new H2Repository();
 
-	@InjectMocks
-	JdbcTemplate template = new JdbcTemplate();
+	// JdbcTemplate template = new JdbcTemplate();
+
+	@Mock
+	JdbcTemplate template;
 
 	@InjectMocks
 	PricesAPI pricesAPI = new PricesAPI();
 
-	@Before
-	public void setUp() {
-		MockitoAnnotations.initMocks(this);
-	}
-
 	@Test
 	void testStatusOk() {
-		boolean result = pricesAPI.status().getStatusCode().is2xxSuccessful();
+		ResponseEntity<String> response = pricesAPI.status();
+
+		boolean result = response.getStatusCode().is2xxSuccessful();
 
 		assertTrue(result);
 	}
@@ -54,8 +66,39 @@ class InditexApplicationTests {
 	@Test
 	void testGetProduct() throws ParseException {
 
-		SimpleDateFormat format = new SimpleDateFormat("yyy-MM-dd'T'HH:mm:ss");
+		Prices prices = getData();
+		// String sql = "SELECT * FROM PRICES WHERE START_DATE=? AND END_DATE=? AND
+		// PRODUCT_ID=? AND BRAND_ID=? ORDER BY PRIORITY DESC";
 
+		// ResponseEntity<Prices> response = new ResponseEntity<Prices>(prices,
+		// HttpStatus.OK);
+
+		// ReflectionTestUtils.setField(prices, "template", template);
+
+//		Mockito.when(template.queryForObject(sql, Mockito.eq(Prices.class))).thenReturn(prices);
+//
+//		Mockito.when(entityRepository.getPrice(prices.getStartDate(), prices.getEndDate(), prices.getProductId(),
+//				prices.getBrandId())).thenReturn(prices);
+//
+		Mockito.when(pricesInputPort.getPrice(Mockito.any(), Mockito.any(), Mockito.anyString(), Mockito.anyInt()))
+				.thenReturn(prices);
+
+//		Mockito.when(pricesAPI.getPrice(Mockito.any(), Mockito.any(), Mockito.anyString(), Mockito.anyInt()))
+//				.thenReturn(response);
+
+		assertNotNull(pricesAPI.getPrice(prices.getStartDate(), prices.getEndDate(), prices.getProductId(),
+				prices.getBrandId()));
+
+//		boolean result = pricesAPI
+//				.getPrice(prices.getStartDate(), prices.getEndDate(), prices.getProductId(), prices.getBrandId())
+//				.getStatusCode().is2xxSuccessful();
+
+		// assertTrue(result);
+
+	}
+
+	public Prices getData() throws ParseException {
+		SimpleDateFormat format = new SimpleDateFormat("yyy-MM-dd'T'HH:mm:ss");
 		Prices prices = new Prices();
 
 		prices.setBrandId(1);
@@ -68,26 +111,41 @@ class InditexApplicationTests {
 		prices.setPrice(35.50);
 		prices.setCurr("EUR");
 
-		ResponseEntity<Prices> response = new ResponseEntity<Prices>(prices, HttpStatus.OK);
+		return prices;
+	}
 
-		Mockito.when(this.template.queryForObject(Mockito.anyString(),
-				new Object[] { Mockito.any(), Mockito.any(), Mockito.anyString(), Mockito.anyInt() },
-				new BeanPropertyRowMapper<Prices>(Prices.class))).thenReturn(prices);
+	public Prices getData2() throws ParseException {
+		SimpleDateFormat format = new SimpleDateFormat("yyy-MM-dd'T'HH:mm:ss");
+		Prices prices = new Prices();
 
-		Mockito.when(
-				this.entityRepository.getPrice(Mockito.any(), Mockito.any(), Mockito.anyString(), Mockito.anyInt()))
-				.thenReturn(prices);
+		prices.setBrandId(1);
+		prices.setId((long) 2);
+		prices.setStartDate(format.parse("2020-06-15T00:00:00"));
+		prices.setEndDate(format.parse("2020-12-21T23:59:59"));
+		prices.setProductId("35455");
+		prices.setPriceList(1);
+		prices.setPriority(0);
+		prices.setPrice(30.50);
+		prices.setCurr("EUR");
 
-		Mockito.when(this.pricesInputPort.getPrice(Mockito.any(), Mockito.any(), Mockito.anyString(), Mockito.anyInt()))
-				.thenReturn(prices);
+		return prices;
+	}
 
-		Mockito.when(pricesAPI.getPrice(Mockito.any(), Mockito.any(), Mockito.anyString(), Mockito.anyInt()))
-				.thenReturn(response);
+	public Prices getData3() throws ParseException {
+		SimpleDateFormat format = new SimpleDateFormat("yyy-MM-dd'T'HH:mm:ss");
+		Prices prices = new Prices();
 
-		boolean result = pricesAPI.status().getStatusCode().is2xxSuccessful();
+		prices.setBrandId(1);
+		prices.setId((long) 3);
+		prices.setStartDate(format.parse("2020-06-16T00:00:00"));
+		prices.setEndDate(format.parse("2020-12-26T23:59:59"));
+		prices.setProductId("35455");
+		prices.setPriceList(1);
+		prices.setPriority(0);
+		prices.setPrice(40.50);
+		prices.setCurr("EUR");
 
-		assertTrue(result);
-
+		return prices;
 	}
 
 }
